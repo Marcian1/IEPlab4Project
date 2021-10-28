@@ -1,0 +1,3 @@
+/home/marcian/Desktop/IEP/Laborator4/build/CMakeFiles/rebuild_cache.dir
+/home/marcian/Desktop/IEP/Laborator4/build/CMakeFiles/edit_cache.dir
+/home/marcian/Desktop/IEP/Laborator4/build/CMakeFiles/hello_world.dir
