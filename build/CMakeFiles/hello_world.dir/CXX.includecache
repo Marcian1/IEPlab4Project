@@ -9,4 +9,8 @@
 /home/marcian/Desktop/IEP/Laborator4/main.cpp
 iostream
 -
+vector
+-
+cmath
+-
 
