@@ -7,18 +7,16 @@
 class Cursant {
 
   protected:
-  std::string nume = ""; //std este un namespace(regiune declarativa pentru nume de tipuri, functii, variabile)		
+    std::string nume = ""; //std este un namespace(regiune declarativa pentru nume de tipuri, functii, variabile)		
   std::string prenume = ""; //"::" e un operator numit "scope" care precizeaza compilatorului dupa ce nume sa se uite in lista de identificatori
-  int varsta = 0; //nu e indicat sa folosim using namespace std pentru ca exista foarte multe elemente definite acolo si e posibil							//sa existe conflicte de nume de indentificator
+  int varsta = 0; //nu e indicat sa folosim using namespace std pentru ca exista foarte multe elemente definite acolo si e posibil sa existe conflicte de nume de indentificatori							//sa existe conflicte de nume de indentificator
   double nota = 0;
 
   public:
     Cursant(const std::string & nume,
-      const std::string & prenume, int varsta) 
-	  : nume(nume),
-	  	prenume(nume),
-		varsta(varsta) 
-	{}
+      const std::string & prenume, int varsta): nume(nume),
+    prenume(nume),
+    varsta(varsta) {}
 
   virtual std::string toString() {
     return nume + " " + prenume + " " + std::to_string(varsta) + " " + std::to_string(nota) + "\n";
@@ -71,24 +69,19 @@ class Profesor {
     int count = 0;
 
   public:
-    Profesor(const std::string & materie, std::vector < Cursant * > & cursantia) {
-
-      this -> materie = materie;
-      for (int i = 0; i < cursantia.size(); i++) {
-
-        if (count > cursantia.size()) {
-          return;
-        }
-
-        cursanti[count++] = cursantia[i];
-      }
+    ~Profesor() {
+      std::cout << "Profesor destructor called!" << std::endl;
+      cursanti.clear();
     }
+  Profesor(const std::string & materie, std::vector < Cursant * > & cursantia): materie(materie), cursanti(cursantia), count(cursantia.size() - 1) {
+
+  }
   void evalueaza() {
     for (int i = 0; i < count; i++) {
       cursanti[i] -> primestePunctaj(rand() % 10 + 1);
     }
   }
-  virtual void medie() {
+  void medie() {
     int suma = 0;
     for (int i = 0; i < count; i++) {
       suma += cursanti[i] -> getNota();
@@ -96,7 +89,7 @@ class Profesor {
     }
     std::cout << static_cast < double > (suma) / static_cast < double > (count) << std::endl;
   }
-  virtual std::string toString() {
+   std::string toString() {
     std::string sir = "Rezultate:\n";
     for (int i = 0; i < count; i++) {
       sir += cursanti[i] -> toString() + " ";
@@ -112,18 +105,22 @@ class Director {
    */
 
   protected:
-    Director(const std::string value, std::vector < Profesor * > & profesoria): nume(value), profesori(profesoria)  {}
+    Director(const std::string value, std::vector < Profesor * > & profesoria): nume(value), profesori(profesoria) {}
 
   static Director * director_;
 
   std::string nume;
   std::vector < Profesor * > profesori = std::vector < Profesor * > (300);
   public:
+    ~Director() {
+      std::cout << "Director destructor called!" << std::endl;
+      profesori.clear();
+    }
 
-    /**
-     * Singletons should not be cloneable.
-     */
-    Director(Director & other) = delete;
+  /**
+   * Singletons should not be cloneable.
+   */
+  Director(Director & other) = delete;
   /**
    * Singletons should not be assignable.
    */
@@ -135,13 +132,13 @@ class Director {
    * object stored in the static field.
    */
 
-  static Director * GetInstance(const std::string & value,std::vector < Profesor * > &profesoria) {
+  static Director * GetInstance(const std::string & value, std::vector < Profesor * > & profesoria) {
     /**
      * This is a safer way to create an instance. instance = new Director is
      * dangeruous in case two instance threads wants to access at the same time
      */
     if (director_ == nullptr) {
-      director_ = new Director(value,profesoria);
+      director_ = new Director(value, profesoria);
     }
     return director_;
   }
@@ -154,8 +151,8 @@ class Director {
   }
   void afiseazaPersoaneInstitutie() {
     for (int i = 0; i < profesori.size(); i++) {
-        std::cout << profesori[i] -> toString() << std::endl;
-      }
+      std::cout << profesori[i] -> toString() << std::endl;
+    }
   }
 
   std::string value() const {
@@ -186,9 +183,8 @@ int main(int argc, char ** argv) {
     p
   };
 
-
   const std::string nume = "Director";
-  Director *d = Director::GetInstance(nume, profesori);
+  Director * d = Director::GetInstance(nume, profesori);
   d -> afiseazaPersoaneInstitutie();
   delete p;
   delete z;
